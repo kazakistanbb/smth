@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Meeting Countdown! ❤️</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            text-align: center;
+            /* Теплый светло-розовый фон */
+            background-color: #ffe0e6; /* Мягкий розовый */
+            overflow: hidden; /* Скрываем сердечки за пределами экрана */
+            position: relative; /* Для позиционирования сердечек */
+        }
+
+        .timer-container {
+            background-color: rgba(255, 255, 255, 0.85); /* Полупрозрачный белый фон для текста */
+            padding: 40px 60px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease-out;
+            max-width: 90%;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px); /* Легкое размытие фона за контейнером */
+            z-index: 10; /* Убедимся, что таймер находится поверх сердечек */
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #d63384; /* Милый розовый цвет */
+            margin-bottom: 35px;
+            font-size: 3em;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 3.5em; /* Очень большие цифры */
+            font-weight: 800; /* Очень жирные */
+            color: #000000; /* Черные цифры */
+            min-width: 120px;
+            box-sizing: border-box;
+            line-height: 1.1;
+        }
+
+        .time-unit span:last-child {
+            font-size: 0.35em;
+            font-weight: normal;
+            margin-top: 5px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .note {
+            margin-top: 50px;
+            font-size: 1.3em;
+            color: #444;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .highlight {
+            color: #007bff; /* Синий цвет для важных дат/времени */
+            font-weight: bold;
+        }
+
+        /* Анимация плавающих сердечек */
+        .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Чтобы сердечки не мешали кликать */
+            overflow: hidden;
+            z-index: 1; /* Сердечки под таймером */
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -20px; /* Начинаем за экраном */
+            font-size: 2em; /* Размер сердечка */
+            color: rgba(255, 105, 180, 0.7); /* Розовое сердечко, полупрозрачное */
+            animation: floatHeart linear infinite;
+            transform: translateX(0); /* Начальное положение */
+            opacity: 0; /* Изначально невидимое */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Легкая тень */
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translate(0, 0) scale(0.5);
+                opacity: 0;
+            }
+            25% {
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(calc(var(--rand-x) * 1px), -50vh) scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(calc(var(--rand-x) * 1px), -100vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .timer-container {
+                padding: 30px 25px;
+                margin: 15px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+                margin-bottom: 25px;
+            }
+
+            .countdown {
+                gap: 20px;
+            }
+
+            .time-unit {
+                font-size: 2.8em;
+                min-width: 90px;
+            }
+
+            .time-unit span:last-child {
+                font-size: 0.3em;
+            }
+
+            .note {
+                font-size: 1em;
+                margin-top: 30px;
+            }
+            .heart {
+                font-size: 1.5em; /* Меньшие сердечки на мобильных */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timer-container {
+                padding: 25px 15px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .time-unit {
+                font-size: 2.2em;
+                min-width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="hearts-container"></div>
+
+    <div class="timer-container">
+        <h1>Our Meeting in Astana! ❤️</h1>
+        <div class="countdown">
+            <div class="time-unit">
+                <span id="weeks">00</span>
+                <span>Weeks</span>
+            </div>
+            <div class="time-unit">
+                <span id="days">00</span>
+                <span>Days</span>
+            </div>
+            <div class="time-unit">
+                <span id="hours">00</span>
+                <span>Hours</span>
+            </div>
+            <div class="time-unit">
+                <span id="minutes">00</span>
+                <span>Minutes</span>
+            </div>
+            <div class="time-unit">
+                <span id="seconds">00</span>
+                <span>Seconds</span>
+            </div>
+        </div>
+        <p class="note">
+            My flight arrives in <span class="highlight">Astana</span> on <br>
+            <span class="highlight">June 14, 2025, at 04:45 AM</span>.<br>
+            Can't wait to see you!
+        </p>
+    </div>
+
+    <script>
+        // Set your arrival date and time in Astana
+        // Year, Month (0-11), Day, Hour, Minute, Second
+        const targetDate = new Date(2025, 5, 14, 4, 45, 0).getTime(); // June 14, 2025, 04:45:00 AM
+
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById('weeks').innerText = '00';
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                document.querySelector('h1').innerText = 'We Met!';
+                document.querySelector('.note').innerHTML = 'Finally, we are together!';
+                clearInterval(countdownInterval);
+                return;
+            }
+
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const weeks = Math.floor(days / 7);
+
+            const remainingDays = days % 7;
+
+            document.getElementById('weeks').innerText = String(weeks).padStart(2, '0');
+            document.getElementById('days').innerText = String(remainingDays).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        };
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+
+        // JS for floating hearts
+        const heartsContainer = document.getElementById('hearts-container');
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️'; // Само сердечко
+            heart.style.left = `${Math.random() * 100}vw`; // Случайная позиция по горизонтали
+            heart.style.animationDuration = `${Math.random() * 5 + 5}s`; // Случайная продолжительность анимации
+            heart.style.animationDelay = `${Math.random() * 2}s`; // Случайная задержка
+            heart.style.setProperty('--rand-x', Math.random() * 100 - 50); // Для небольшого горизонтального смещения
+            heartsContainer.appendChild(heart);
+
+            // Удаляем сердечко после завершения анимации, чтобы не перегружать DOM
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        // Создаем новые сердечки каждые полсекунды
+        setInterval(createHeart, 500);
+    </script>
+</body>
+</html>
