@@ -14,22 +14,21 @@
             margin: 0;
             color: #333;
             text-align: center;
-            /* Теплый светло-розовый фон */
-            background-color: #ffe0e6; /* Мягкий розовый */
-            overflow: hidden; /* Скрываем сердечки за пределами экрана */
-            position: relative; /* Для позиционирования сердечек */
+            background-color: #ffe0e6;
+            overflow: hidden;
+            position: relative;
         }
 
         .timer-container {
-            background-color: rgba(255, 255, 255, 0.85); /* Полупрозрачный белый фон для текста */
+            background-color: rgba(255, 255, 255, 0.85);
             padding: 40px 60px;
             border-radius: 25px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
             animation: fadeIn 1.5s ease-out;
             max-width: 90%;
             box-sizing: border-box;
-            backdrop-filter: blur(5px); /* Легкое размытие фона за контейнером */
-            z-index: 10; /* Убедимся, что таймер находится поверх сердечек */
+            backdrop-filter: blur(5px);
+            z-index: 10;
             position: relative;
         }
 
@@ -39,11 +38,21 @@
         }
 
         h1 {
-            color: #d63384; /* Милый розовый цвет */
+            color: #d63384;
             margin-bottom: 35px;
             font-size: 3em;
             letter-spacing: 2px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ИЗМЕНЕНИЕ: Стиль для новой надписи */
+        .subtitle {
+            font-size: 1.25em;
+            color: #666;
+            margin-top: -20px; /* Подвинем поближе к заголовку */
+            margin-bottom: 30px;
+            font-style: italic;
+            font-weight: 500;
         }
 
         .countdown {
@@ -58,9 +67,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 3.5em; /* Очень большие цифры */
-            font-weight: 800; /* Очень жирные */
-            color: #000000; /* Черные цифры */
+            font-size: 3.5em;
+            font-weight: 800;
+            color: #000000;
             min-width: 120px;
             box-sizing: border-box;
             line-height: 1.1;
@@ -84,194 +93,208 @@
         }
 
         .highlight {
-            color: #007bff; /* Синий цвет для важных дат/времени */
+            color: #007bff;
             font-weight: bold;
         }
 
-        /* Анимация плавающих сердечек */
-        .hearts-container {
+        .elements-container {
             position: absolute;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            pointer-events: none; /* Чтобы сердечки не мешали кликать */
+            pointer-events: none;
             overflow: hidden;
-            z-index: 1; /* Сердечки под таймером */
+            z-index: 1;
         }
-
-        .heart {
+        
+        .floating-heart, .floating-logo {
             position: absolute;
-            bottom: -20px; /* Начинаем за экраном */
-            font-size: 2em; /* Размер сердечка */
-            color: rgba(255, 105, 180, 0.7); /* Розовое сердечко, полупрозрачное */
-            animation: floatHeart linear infinite;
-            transform: translateX(0); /* Начальное положение */
-            opacity: 0; /* Изначально невидимое */
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Легкая тень */
+            opacity: 0;
+            animation: floatLikeMadi linear infinite;
+        }
+        
+        .floating-heart {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(45deg);
         }
 
-        @keyframes floatHeart {
+        .floating-heart::before,
+        .floating-heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: inherit;
+            border-radius: 50%;
+        }
+
+        .floating-heart::before { top: -10px; left: 0; }
+        .floating-heart::after { left: -10px; top: 0; }
+
+        .floating-logo {
+            height: var(--logo-size);
+            width: auto;
+            filter: grayscale(100%) brightness(1.5);
+        }
+        
+        @keyframes floatLikeMadi {
             0% {
-                transform: translate(0, 0) scale(0.5);
+                transform: translateY(100vh) rotate(45deg);
                 opacity: 0;
             }
-            25% {
-                opacity: 0.8;
+            10% {
+                opacity: 0.7;
             }
-            50% {
-                transform: translate(calc(var(--rand-x) * 1px), -50vh) scale(1);
-                opacity: 0.5;
+            90% {
+                opacity: 0.7;
             }
             100% {
-                transform: translate(calc(var(--rand-x) * 1px), -100vh) scale(1.2);
+                transform: translateY(-10vh) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        
+        .floating-logo {
+            animation-name: floatLikeMadiLogo;
+        }
+        
+        @keyframes floatLikeMadiLogo {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--peak-opacity, 0.15);
+            }
+            90% {
+                opacity: var(--peak-opacity, 0.15);
+            }
+            100% {
+                transform: translateY(-10vh);
                 opacity: 0;
             }
         }
 
-        /* Responsive adjustments for smaller screens */
         @media (max-width: 768px) {
-            .timer-container {
-                padding: 30px 25px;
-                margin: 15px;
-            }
-
-            h1 {
-                font-size: 2.2em;
-                margin-bottom: 25px;
-            }
-
-            .countdown {
-                gap: 20px;
-            }
-
-            .time-unit {
-                font-size: 2.8em;
-                min-width: 90px;
-            }
-
-            .time-unit span:last-child {
-                font-size: 0.3em;
-            }
-
-            .note {
-                font-size: 1em;
-                margin-top: 30px;
-            }
-            .heart {
-                font-size: 1.5em; /* Меньшие сердечки на мобильных */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .timer-container {
-                padding: 25px 15px;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
-            .time-unit {
-                font-size: 2.2em;
-                min-width: 70px;
-            }
+            .timer-container { padding: 30px 25px; margin: 15px; }
+            h1 { font-size: 2.2em; margin-bottom: 25px; }
+            .subtitle { font-size: 1.1em; }
+            .countdown { gap: 20px; }
+            .time-unit { font-size: 2.8em; min-width: 90px; }
+            .note { font-size: 1em; margin-top: 30px; }
+            .floating-heart { width: 15px; height: 15px; }
+            .floating-heart::before { top: -7px; }
+            .floating-heart::after { left: -7px; }
         }
     </style>
 </head>
 <body>
-    <div class="hearts-container" id="hearts-container"></div>
+    <div class="elements-container" id="elements-container"></div>
 
     <div class="timer-container">
         <h1>Our Meeting in Astana! ❤️</h1>
+        <p class="subtitle">Встреча красавчика с Самой очаровательной Хобай❤️❤️❤️</p>
+        
         <div class="countdown">
-            <div class="time-unit">
-                <span id="weeks">00</span>
-                <span>Weeks</span>
-            </div>
-            <div class="time-unit">
-                <span id="days">00</span>
-                <span>Days</span>
-            </div>
-            <div class="time-unit">
-                <span id="hours">00</span>
-                <span>Hours</span>
-            </div>
-            <div class="time-unit">
-                <span id="minutes">00</span>
-                <span>Minutes</span>
-            </div>
-            <div class="time-unit">
-                <span id="seconds">00</span>
-                <span>Seconds</span>
-            </div>
+            <div class="time-unit"><span id="weeks">00</span><span>Weeks</span></div>
+            <div class="time-unit"><span id="days">00</span><span>Days</span></div>
+            <div class="time-unit"><span id="hours">00</span><span>Hours</span></div>
+            <div class="time-unit"><span id="minutes">00</span><span>Minutes</span></div>
+            <div class="time-unit"><span id="seconds">00</span><span>Seconds</span></div>
         </div>
         <p class="note">
-            My flight arrives in <span class="highlight">Astana</span> on <br>
-            <span class="highlight">June 14, 2025, at 04:45 AM</span>.<br>
+            Our meeting is set for <span class="highlight">Astana</span> on <br>
+            <span class="highlight">July 24, 2025, at 08:25 AM</span>.<br>
             Can't wait to see you!
         </p>
     </div>
 
     <script>
-        // Set your arrival date and time in Astana
-        // Year, Month (0-11), Day, Hour, Minute, Second
-        const targetDate = new Date(2025, 5, 14, 4, 45, 0).getTime(); // June 14, 2025, 04:45:00 AM
+        const targetDate = new Date(2025, 6, 24, 8, 25, 0).getTime();
 
-        const updateCountdown = () => {
+        function updateCountdown() {
             const now = new Date().getTime();
             const distance = targetDate - now;
 
             if (distance < 0) {
-                document.getElementById('weeks').innerText = '00';
-                document.getElementById('days').innerText = '00';
-                document.getElementById('hours').innerText = '00';
-                document.getElementById('minutes').innerText = '00';
-                document.getElementById('seconds').innerText = '00';
                 document.querySelector('h1').innerText = 'We Met!';
                 document.querySelector('.note').innerHTML = 'Finally, we are together!';
+                ['weeks', 'days', 'hours', 'minutes', 'seconds'].forEach(id => document.getElementById(id).innerText = '00');
                 clearInterval(countdownInterval);
                 return;
             }
-
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const weeks = Math.floor(days / 7);
-
-            const remainingDays = days % 7;
-
-            document.getElementById('weeks').innerText = String(weeks).padStart(2, '0');
-            document.getElementById('days').innerText = String(remainingDays).padStart(2, '0');
-            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
-            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            document.getElementById('weeks').innerText = String(Math.floor(days / 7)).padStart(2, '0');
+            document.getElementById('days').innerText = String(days % 7).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
         };
-
-        const countdownInterval = setInterval(updateCountdown, 1000);
+        
         updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
 
+        const elementsContainer = document.getElementById('elements-container');
+        const heartColors = ["#ff7f7f", "#ff4d4d", "#ff1a1a", "#ffc0cb", "#ffb6c1", "#ff69b4"];
 
-        // JS for floating hearts
-        const heartsContainer = document.getElementById('hearts-container');
+        const elementsToFloat = [
+            { type: 'heart' }, { type: 'heart' },
+            { type: 'logo', src: 'images/kings_college_london_logo.png', size: '100px' },
+            { type: 'heart' },
+            { type: 'logo', src: 'images/ef_education_first_logo.png', size: '80px' },
+            { type: 'heart' },
+            { type: 'logo', src: 'images/bpg_logo.jpg', size: '120px' },
+            { type: 'heart' },
+        ];
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️'; // Само сердечко
-            heart.style.left = `${Math.random() * 100}vw`; // Случайная позиция по горизонтали
-            heart.style.animationDuration = `${Math.random() * 5 + 5}s`; // Случайная продолжительность анимации
-            heart.style.animationDelay = `${Math.random() * 2}s`; // Случайная задержка
-            heart.style.setProperty('--rand-x', Math.random() * 100 - 50); // Для небольшого горизонтального смещения
-            heartsContainer.appendChild(heart);
+        function createFloatingElement(config, isInitial) {
+            const isHeart = config.type === 'heart';
+            const element = document.createElement(isHeart ? 'div' : 'img');
+            
+            element.className = isHeart ? 'floating-heart' : 'floating-logo';
+            element.style.left = Math.random() * 100 + 'vw';
+            
+            const maxDuration = 10;
+            element.style.animationDuration = (Math.random() * 5 + 5) + 's';
 
-            // Удаляем сердечко после завершения анимации, чтобы не перегружать DOM
-            heart.addEventListener('animationend', () => {
-                heart.remove();
+            if (isInitial) {
+                element.style.animationDelay = -(Math.random() * maxDuration) + 's';
+            } else {
+                element.style.animationDelay = '0s';
+            }
+
+            if (isHeart) {
+                element.style.backgroundColor = heartColors[Math.floor(Math.random() * heartColors.length)];
+            } else {
+                element.src = config.src;
+                element.style.setProperty('--logo-size', config.size);
+                element.style.setProperty('--peak-opacity', 0.15);
+            }
+
+            elementsContainer.appendChild(element);
+
+            element.addEventListener('animationend', () => {
+                element.remove();
             });
         }
+        
+        function init() {
+            for (let i = 0; i < 30; i++) {
+                const config = elementsToFloat[i % elementsToFloat.length];
+                createFloatingElement(config, true);
+            }
+            
+            let elementIndex = 0;
+            setInterval(() => {
+                createFloatingElement(elementsToFloat[elementIndex], false);
+                elementIndex = (elementIndex + 1) % elementsToFloat.length;
+            }, 400);
+        }
 
-        // Создаем новые сердечки каждые полсекунды
-        setInterval(createHeart, 500);
+        init();
     </script>
 </body>
 </html>
